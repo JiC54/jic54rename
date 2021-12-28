@@ -1,24 +1,23 @@
-from pyrogram.emoji import *
-from pyrogram.errors import PeerIdInvalid, ChannelInvalid, FloodWait
-from pyrogram import Client as kinu6, filters
-from ..database.database import *
-from hachoir.parser import createParser
-from hachoir.metadata import extractMetadata
-from ..tools.thumbnail_fixation import fix_thumb
-from ..tools.timegap_check import timegap_check
-from ..tools.progress_bar import progress_bar, take_screen_shot
-from ..tools.text import TEXT
-from ..config import Config
-import random
-import time
-import os
 import logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+import os
+import time
+import random
+from ..config import Config
+from ..tools.text import TEXT
+from ..tools.progress_bar import progress_bar, take_screen_shot
+from ..tools.timegap_check import timegap_check
+from ..tools.thumbnail_fixation import fix_thumb
+from hachoir.metadata import extractMetadata
+from hachoir.parser import createParser
+from ..database.database import *
+from pyrogram import Client as RenamerNs, filters
+from pyrogram.errors import PeerIdInvalid, ChannelInvalid, FloodWait
+from pyrogram.emoji import *
 
-@kinu6.on_message(filters.private & (filters.document | filters.video | filters.audio | filters.voice | filters.video_note))
+
+@RenamerNs.on_message((filters.document|filters.video) & filters.private & filters.incoming)
 async def media(c, m):
     """Checking and Processing the renaming"""
 
@@ -30,22 +29,18 @@ async def media(c, m):
         is_logged = (await get_data(m.from_user.id)).is_logged
         if not is_logged and m.from_user.id not in Config.AUTH_USERS:
             return await m.reply_text(TEXT.NOT_LOGGED_TEXT, quote=True)
-
+        
     if Config.TIME_GAP:
         time_gap = await timegap_check(m)
         if time_gap:
             return
 
-    file_name = await c.ask(chat_id=m.from_user.id, text="Send me the New (FileName.mkv) | (FileName.Mp4) for this file or send /cancel to stop", filters=filters.text)
+    file_name = await c.ask(chat_id=m.from_user.id, text="Send me the New FileName for this file or send /cancel to stop", filters=filters.text)
     await file_name.delete()
     await file_name.request.delete()
     new_file_name = file_name.text
     if new_file_name.lower() == "/cancel":
         await m.delete()
-        return
-    if new_file_name.lower() == "/start":
-        return
-    if new_file_name.lower() == "/mode":
         return
 
     if Config.TIME_GAP:
@@ -64,8 +59,7 @@ async def media(c, m):
         except PeerIdInvalid:
             logger.warning("Give the correct Channel or Group ID.")
         except ChannelInvalid:
-            logger.warning(
-                "Add the bot in the Trace Channel or Group as admin to send details of the users using your bot")
+            logger.warning("Add the bot in the Trace Channel or Group as admin to send details of the users using your bot")
         except Exception as e:
             logger.warning(e)
 
@@ -76,10 +70,10 @@ async def media(c, m):
     start_time = time.time()
     try:
         file_location = await m.download(
-            file_name=download_location,
-            progress=progress_bar,
-            progress_args=("Downloading:", start_time, send_message)
-        )
+                            file_name=download_location,
+                            progress=progress_bar,
+                            progress_args=("Downloading:", start_time, send_message)
+                        )
     except Exception as e:
         logger.error(e)
         await send_message.edit(f"**Error:** {e}")
@@ -94,7 +88,7 @@ async def media(c, m):
         metadata = extractMetadata(createParser(new_file_location))
         duration = 0
         if metadata.has("duration"):
-            duration = metadata.get('duration').seconds
+           duration = metadata.get('duration').seconds
     except:
         duration = 0
 
@@ -169,7 +163,6 @@ async def media(c, m):
         os.remove(new_file_location)
     except:
         pass
-
 
 async def notify(m, time_gap):
     await asyncio.sleep(time_gap)
