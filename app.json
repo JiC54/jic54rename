@@ -40,6 +40,10 @@
             "description": "A default caption to be added to the file at bottom",
             "required": false
         },
+        "DB_URI": {
+            "description": "MongoDb",
+            "required": false
+        },
         "FORCE_SUB": {
             "description": "A telegram channel username without @ to force users to join channel before using bot.",
             "required": false
