@@ -1,9 +1,11 @@
 import logging
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 import os
 import time
-import random
+
 from ..config import Config
 from ..tools.text import TEXT
 from ..tools.progress_bar import progress_bar, take_screen_shot
@@ -12,12 +14,12 @@ from ..tools.thumbnail_fixation import fix_thumb
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from ..database.database import *
-from pyrogram import Client as RenamerNs, filters
+from pyrogram import Client as kinu6, filters
 from pyrogram.errors import PeerIdInvalid, ChannelInvalid, FloodWait
 from pyrogram.emoji import *
 
 
-@RenamerNs.on_message((filters.document|filters.video) & filters.private & filters.incoming)
+@kinu6.on_message((filters.document|filters.video) & filters.private & filters.incoming)
 async def media(c, m):
     """Checking and Processing the renaming"""
 
@@ -41,6 +43,12 @@ async def media(c, m):
     new_file_name = file_name.text
     if new_file_name.lower() == "/cancel":
         await m.delete()
+        return
+    if len(new_file_name) > 128:
+        await m.reply_text('This File Name Is too Big Please Reduce Name And Send Again')
+        return
+    
+    if new_file_name.lower() == "/start":
         return
 
     if Config.TIME_GAP:
