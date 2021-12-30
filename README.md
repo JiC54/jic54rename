@@ -52,7 +52,7 @@ login - (when password is given) to login to bot
 ## Deploy 🚀
 
 <p align="">
-    <a href="https://heroku.com/deploy?template=https://github.com/The-Mayans/Renamer-Bot">
+    <a href="https://heroku.com/deploy?template=https://github.com/kalanakt/Renamer-Bot">
     <img src="https://github.com/nikhileashy/justfor_testing/blob/main/herokudeploy-01-cropped.svg" alt="herokudeploy-01" border="0" height="90" width="285"></a>
 </p>
 
