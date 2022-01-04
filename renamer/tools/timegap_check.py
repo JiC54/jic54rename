@@ -6,17 +6,16 @@ async def timegap_check(m):
     """Checking the time gap is completed or not 
     and checking the parallel process"""
 
-    if m.from_user.id in Config.TIME_GAP_STORE:
-        if int(time.time() - Config.TIME_GAP_STORE[m.from_user.id]) < Config.TIME_GAP:
-            text = f"Please wait {TimeFormatter((int(Config.TIME_GAP_STORE[m.from_user.id]) + Config.TIME_GAP - int(time.time())) * 1000)}."
-            await m.reply_text(
-                text=text,
-                parse_mode="markdown",
-                quote=True
-            )
-            return True
-        else:
-            del Config.TIME_GAP_STORE[m.from_user.id]
-            return False
+    if m.from_user.id not in Config.TIME_GAP_STORE:
+        return False
+    if int(time.time() - Config.TIME_GAP_STORE[m.from_user.id]) < Config.TIME_GAP:
+        text = f"Please wait {TimeFormatter((int(Config.TIME_GAP_STORE[m.from_user.id]) + Config.TIME_GAP - int(time.time())) * 1000)}."
+        await m.reply_text(
+            text=text,
+            parse_mode="markdown",
+            quote=True
+        )
+        return True
     else:
+        del Config.TIME_GAP_STORE[m.from_user.id]
         return False

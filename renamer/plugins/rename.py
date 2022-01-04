@@ -23,15 +23,14 @@ from pyrogram.emoji import *
 async def media(c, m):
     """Checking and Processing the renaming"""
 
-    if Config.BANNED_USERS:
-        if m.from_user.id in Config.BANNED_USERS:
-            return await m.reply_text(TEXT.BANNED_USER_TEXT, quote=True)
+    if Config.BANNED_USERS and m.from_user.id in Config.BANNED_USERS:
+        return await m.reply_text(TEXT.BANNED_USER_TEXT, quote=True)
 
     if Config.BOT_PASSWORD:
         is_logged = (await get_data(m.from_user.id)).is_logged
         if not is_logged and m.from_user.id not in Config.AUTH_USERS:
             return await m.reply_text(TEXT.NOT_LOGGED_TEXT, quote=True)
-        
+
     if Config.TIME_GAP:
         time_gap = await timegap_check(m)
         if time_gap:
@@ -47,7 +46,7 @@ async def media(c, m):
     if len(new_file_name) > 128:
         await m.reply_text('This File Name Is too Big Please Reduce Name And Send Again')
         return
-    
+
     if new_file_name.lower() == "/start":
         return
 

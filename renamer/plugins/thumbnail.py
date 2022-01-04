@@ -12,9 +12,8 @@ logger = logging.getLogger(__name__)
 
 @kinu6.on_message(filters.photo & filters.incoming & filters.private)
 async def save_photo(c, m):
-    if Config.BANNED_USERS:
-        if m.from_user.id in Config.BANNED_USERS:
-            return await m.reply_text(TEXT.BANNED_USER_TEXT, quote=True)
+    if Config.BANNED_USERS and m.from_user.id in Config.BANNED_USERS:
+        return await m.reply_text(TEXT.BANNED_USER_TEXT, quote=True)
 
     if Config.BOT_PASSWORD:
         is_logged = (await get_data(m.from_user.id)).is_logged
@@ -35,9 +34,8 @@ async def save_photo(c, m):
 
 @kinu6.on_message(filters.command("deletethumbnail") & filters.incoming & filters.private)
 async def delete_thumbnail(c, m):
-    if Config.BANNED_USERS:
-        if m.from_user.id in Config.BANNED_USERS:
-            return await m.reply_text(TEXT.BANNED_USER_TEXT, quote=True)
+    if Config.BANNED_USERS and m.from_user.id in Config.BANNED_USERS:
+        return await m.reply_text(TEXT.BANNED_USER_TEXT, quote=True)
 
     if Config.BOT_PASSWORD:
         is_logged = (await get_data(m.from_user.id)).is_logged
@@ -68,9 +66,8 @@ async def delete_thumbnail(c, m):
 
 @kinu6.on_message(filters.command("showthumbnail") & filters.incoming & filters.private)
 async def show_thumbnail(c, m):
-    if Config.BANNED_USERS:
-        if m.from_user.id in Config.BANNED_USERS:
-            return await m.reply_text(TEXT.BANNED_USER_TEXT, quote=True)
+    if Config.BANNED_USERS and m.from_user.id in Config.BANNED_USERS:
+        return await m.reply_text(TEXT.BANNED_USER_TEXT, quote=True)
 
     if Config.BOT_PASSWORD:
         is_logged = (await get_data(m.from_user.id)).is_logged
