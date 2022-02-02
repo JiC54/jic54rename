@@ -23,6 +23,7 @@ class Config:
     CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION") if os.environ.get("CUSTOM_CAPTION", "") else None
     FORCE_SUB = os.environ.get("FORCE_SUB", "") or None
     DB_URI = os.environ.get("DB_URI", "")
+    DATABASE_URL = os.environ.get("DATABASE_URL", "DB_URI")
     DOWNLOAD_LOCATION = "./DOWNLOADS"
     try:
         TIME_GAP = int(os.environ.get("TIME_GAP", "")) if os.environ.get("TIME_GAP", "") else None
